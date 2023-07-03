@@ -1,0 +1,29 @@
+databases:
+  - name: cog_django_messenger
+    region: oregon
+    user: cog_django_messenger
+
+services:
+  - type: web
+    name: cog_django_messenger
+    env: python
+    region: oregon
+    buildCommand: './build.sh'
+    startCommand: 'gunicorn config.wsgi'
+    plan: free
+    branch: main
+    healthCheckPath: /
+    envVars:
+      - key: DEBUG
+        value: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cog_django_messenger
+          property: connectionString
+      - key: RENDER
+        value: true
+    autoDeploy: true
