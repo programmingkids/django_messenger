@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load bootstrap4 %}
+
+{% block title%}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 p-2 bg-primary text-white">{{ title }} - {{object.name}}</h2>
+    
+    <div class="mb-3">
+        <a href="{% url 'messenger:dashboard' %}" class="btn btn-primary">ダッシュボードに戻る</a>
+    </div>
+    <div class="mb-3">
+    {% for message in object_list %}
+        {% if message.user.id == user.id %}
+        <div class="mb-2 d-flex flex-row-reverse">
+            <div class="px-4 py-2 bg-success text-white">
+        {% else %}
+        <div class="mb-2 d-flex flex-row">
+            <div class="px-4 py-2 bg-secondary text-white">
+        {% endif %}
+                <div>{{message.user.username}}</div>
+                <div>{{message.body|linebreaksbr}}</div>
+                <div>{{message.created_at}}</div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+    
+    <form action="{% url 'messenger:message_talk' view.kwargs.group_id %}" method="post" novalidate>
+        {% csrf_token %}
+        {% bootstrap_form_errors form %}
+        {% bootstrap_form form layout='inline' %}
+        <button type="submit" class="btn btn-primary">送信</button>
+    </form>
+</div>
+{% endblock %}
