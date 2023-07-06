@@ -1,6 +1,7 @@
 databases:
   - name: cog_django_messenger
     region: oregon
+    plan: free
     user: cog_django_messenger
 
 services:
